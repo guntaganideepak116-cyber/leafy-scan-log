@@ -30,7 +30,7 @@ export function enableOfflineAppShell(): void {
     return;
   }
 
-  void import("virtual:pwa-register")
-    .then(({ registerSW }) => registerSW({ immediate: true }))
+  void navigator.serviceWorker
+    .register("/sw.js")
     .catch((error: unknown) => console.error("Offline app installation is unavailable.", error));
 }
