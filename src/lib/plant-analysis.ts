@@ -46,20 +46,20 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 
 export function parsePlantAnalysis(payload: unknown): PlantAnalysis {
   const outer = asRecord(payload);
-  if (!outer || outer.success === false) {
-    throw new Error(typeof outer?.message === "string" ? outer.message : "analysis_failed");
+  if (!outer || outer["success"] === false) {
+    throw new Error(typeof outer?.["message"] === "string" ? outer["message"] : "analysis_failed");
   }
 
-  const data = asRecord(outer.data) ?? outer;
-  const disease = asRecord(data.disease);
-  const plant = asRecord(data.plant);
+  const data = asRecord(outer["data"]) ?? outer;
+  const disease = asRecord(data["disease"]);
+  const plant = asRecord(data["plant"]);
 
   return {
     ...data,
     disease: disease as PlantDisease | null,
     plant: plant as PlantSpecies | null,
-    provider: typeof data.provider === "string" ? data.provider : undefined,
-    analyzedAt: typeof data.analyzedAt === "string" ? data.analyzedAt : undefined,
+    ...(typeof data["provider"] === "string" ? { provider: data["provider"] } : {}),
+    ...(typeof data["analyzedAt"] === "string" ? { analyzedAt: data["analyzedAt"] } : {}),
   };
 }
 
