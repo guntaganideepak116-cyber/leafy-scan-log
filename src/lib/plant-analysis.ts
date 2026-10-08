@@ -96,7 +96,7 @@ export function readScanHistory(): ScanRecord[] {
   }
 }
 
-export function saveScanHistory(analysis: PlantAnalysis | null): void {
+export function saveScanHistory(analysis: PlantAnalysis | null): ScanRecord {
   const record: ScanRecord = {
     id: crypto.randomUUID(),
     analyzedAt: analysis?.analyzedAt ?? new Date().toISOString(),
@@ -109,6 +109,8 @@ export function saveScanHistory(analysis: PlantAnalysis | null): void {
   } catch {
     // AI results remain visible even when the browser disables local history.
   }
+
+  return record;
 }
 
 export function describeAnalysisError(error: unknown): string {
