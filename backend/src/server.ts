@@ -89,11 +89,24 @@ app.use((err: unknown, _req: express.Request, res: express.Response, _next: expr
   });
 });
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`===============================================`);
-  console.log(`🌱 SMART PLANT AI BACKEND SERVICE STARTED`);
-  console.log(`🚀 Port: ${PORT}`);
-  console.log(`🌐 Local URL: http://localhost:${PORT}`);
-  console.log(`🩺 Health check: http://localhost:${PORT}/api/health`);
-  console.log(`===============================================`);
-});
+import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
+
+const isMainModule = Boolean(
+  process.argv[1] &&
+    resolve(process.argv[1]).toLowerCase() === resolve(fileURLToPath(import.meta.url)).toLowerCase()
+);
+
+if (isMainModule && !process.env.VERCEL) {
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`===============================================`);
+    console.log(`🌱 SMART PLANT AI BACKEND SERVICE STARTED`);
+    console.log(`🚀 Port: ${PORT}`);
+    console.log(`🌐 Local URL: http://localhost:${PORT}`);
+    console.log(`🩺 Health check: http://localhost:${PORT}/api/health`);
+    console.log(`===============================================`);
+  });
+}
+
+export default app;
+export { app };

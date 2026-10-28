@@ -27,7 +27,7 @@ plant D/
 
 ---
 
-## 3-Step Quick Start
+## 3-Step Quick Start (Local Development)
 
 ### Step 1: Start Backend API
 ```bash
@@ -54,9 +54,41 @@ npm run dev
 
 ---
 
-## Real Mobile Phone Testing (Rear Camera)
-Smartphone browsers require HTTPS for camera access when not on `localhost`.
-Use a free tunnel such as **ngrok** to test on your phone:
-1. `ngrok http 5000` -> Copy the HTTPS backend URL into `frontend/.env` (`VITE_API_BASE_URL=https://....ngrok-free.app`).
-2. `ngrok http 5173` -> Open the HTTPS URL in your phone's browser.
-3. Tap **Scan Plant**, capture a real leaf with your rear camera, and receive live AI results!
+## Deploy to Vercel (Project Name: `smartplant-ai`)
+
+Both the frontend PWA and the backend Express API deploy together under a **single unified Vercel deployment** with zero CORS configuration needed:
+
+### Option A: Via Vercel Dashboard (Recommended)
+1. Go to [vercel.com/new](https://vercel.com/new) and log in.
+2. Select repository: **`guntaganideepak116-cyber/leafy-scan-log`**.
+3. In **Project Name**, enter exactly:
+   ```
+   smartplant-ai
+   ```
+4. Leave **Framework Preset** as **Other** (configured automatically by `vercel.json`).
+5. Open **Environment Variables** and add:
+   - `PLANTNET_API_KEY`: Your key from [my.plantnet.org](https://my.plantnet.org/)
+   - *(Optional Firebase keys if syncing Firestore)*:
+     - `FIREBASE_PROJECT_ID`
+     - `FIREBASE_CLIENT_EMAIL`
+     - `FIREBASE_PRIVATE_KEY`
+6. Click **Deploy**.
+   Your application will be live at `https://smartplant-ai.vercel.app`!
+
+### Option B: Via Vercel CLI
+```bash
+# In the root project directory:
+npx vercel --prod
+```
+When prompted for project name, specify:
+`smartplant-ai`
+
+---
+
+## Real Mobile Phone Testing (Rear Camera & PWA Installation)
+Smartphone browsers require HTTPS for camera and service worker features.
+When deployed on Vercel (`https://smartplant-ai.vercel.app`):
+1. Open the URL in Safari (iOS) or Chrome (Android).
+2. Tap **Install App** on the native popup prompt to add it to your home screen.
+3. Tap **Scan Plant** to analyze plant leaves directly with your phone's camera!
+

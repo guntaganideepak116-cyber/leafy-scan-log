@@ -188,11 +188,7 @@ function ScannerPage() {
       setError("Choose a clear JPEG or PNG photo to analyze.");
       return;
     }
-    const baseUrl = import.meta.env.VITE_API_BASE_URL;
-    if (!baseUrl) {
-      setError(describeAnalysisError(new Error("backend_unavailable")));
-      return;
-    }
+    const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "";
 
     setAnalyzing(true);
     setError(null);

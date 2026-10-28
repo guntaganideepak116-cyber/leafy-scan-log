@@ -8,6 +8,8 @@ dist-ssr/
 .output/
 .vinxi/
 .nitro/
+.vercel/
+*/.vercel/
 
 # Environment variables & secrets (CRITICAL)
 .env
