@@ -410,7 +410,7 @@ function ResultPage() {
           ) : null}
 
           {/* PDF Download (NEW UNIQUE FEATURE) */}
-          <section className="rounded-2xl border border-border bg-gradient-to-br from-emerald-50 to-teal-50 p-5">
+          <section className="rounded-2xl border border-border bg-linear-to-br from-emerald-50 to-teal-50 p-5">
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
                 <FileText className="h-5 w-5" />

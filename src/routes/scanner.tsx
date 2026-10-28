@@ -468,7 +468,7 @@ function ScannerPage() {
         /* ── 4. LIVE NATIVE CAMERA VIEWFINDER ── */
         <section aria-label="Live camera view" className="flex flex-col gap-3">
           {/* Viewfinder Window */}
-          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl border-2 border-emerald-500/20 bg-black shadow-2xl">
+          <div className="relative aspect-3/4 w-full overflow-hidden rounded-3xl border-2 border-emerald-500/20 bg-black shadow-2xl">
             <video
               ref={videoRef}
               playsInline

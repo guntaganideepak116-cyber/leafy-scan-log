@@ -8,7 +8,7 @@ export function AppHeader() {
       <div className="flex h-14 w-full items-center justify-between px-4">
         {/* Logo and Brand */}
         <Link to="/" className="flex items-center gap-2.5 group" aria-label="Smart Plant AI home">
-          <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white shadow-md shadow-emerald-600/20 group-hover:scale-105 transition-transform">
+          <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-emerald-500 to-teal-700 text-white shadow-md shadow-emerald-600/20 group-hover:scale-105 transition-transform">
             <Leaf className="h-5 w-5" aria-hidden="true" />
           </div>
           <div>

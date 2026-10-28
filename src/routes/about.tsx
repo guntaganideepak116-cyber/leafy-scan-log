@@ -70,7 +70,7 @@ function AboutPage() {
       </section>
 
       {/* PWA Install Card */}
-      <section className="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-transparent p-4">
+      <section className="rounded-2xl border border-emerald-500/20 bg-linear-to-br from-emerald-500/10 via-teal-500/5 to-transparent p-4">
         <div className="flex items-start gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-md">
             <Smartphone className="h-5 w-5" />

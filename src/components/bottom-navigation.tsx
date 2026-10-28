@@ -50,7 +50,7 @@ export function BottomNavigation() {
                     aria-label="Scan a plant leaf"
                     className="group -mt-7 flex flex-col items-center justify-center focus:outline-none"
                   >
-                    <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-emerald-600 via-green-500 to-teal-500 text-white shadow-lg shadow-emerald-600/30 ring-4 ring-background transition-transform duration-200 active:scale-90 group-hover:scale-105">
+                    <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-tr from-emerald-600 via-green-500 to-teal-500 text-white shadow-lg shadow-emerald-600/30 ring-4 ring-background transition-transform duration-200 active:scale-90 group-hover:scale-105">
                       <Icon className="h-6 w-6 stroke-[2.2]" aria-hidden="true" />
                       {/* Subtle pulse ring */}
                       <span className="absolute inset-0 rounded-full bg-emerald-500/20 animate-ping opacity-40 pointer-events-none" />

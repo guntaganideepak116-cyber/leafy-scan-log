@@ -106,7 +106,7 @@ function HomePage() {
   return (
     <main className="flex w-full flex-col gap-6 px-4 pt-4">
       {/* ── Mobile Hero Banner ── */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 p-6 text-white shadow-xl shadow-emerald-900/20">
+      <section className="relative overflow-hidden rounded-3xl bg-linear-to-br from-emerald-600 via-emerald-700 to-teal-800 p-6 text-white shadow-xl shadow-emerald-900/20">
         {/* Decorative background glow */}
         <div
           className="absolute inset-0 opacity-15"
@@ -285,7 +285,7 @@ function HomePage() {
       </section>
 
       {/* ── Install PWA Banner ── */}
-      <section className="rounded-2xl border border-emerald-500/20 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-4">
+      <section className="rounded-2xl border border-emerald-500/20 bg-linear-to-r from-emerald-500/10 to-teal-500/10 p-4">
         <div className="flex items-center gap-3">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-md">
             <Smartphone className="h-5 w-5" />

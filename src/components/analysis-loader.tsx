@@ -31,7 +31,7 @@ export function AnalysisLoader() {
         <div className="absolute inset-2 rounded-full border border-emerald-500/40 animate-pulse" />
 
         {/* Core circle */}
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-600/30">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-tr from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-600/30">
           <Leaf className="h-8 w-8 animate-bounce" />
         </div>
       </div>
