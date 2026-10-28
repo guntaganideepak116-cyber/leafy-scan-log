@@ -1,17 +1,24 @@
-import admin from "firebase-admin";
 import type { DiseaseInfo } from "../types/index.js";
 
-let firestoreDb: admin.firestore.Firestore | null = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let firestoreDb: any = null;
+let firebaseInitialized = false;
 
-// Initialize Firebase Admin if environment variables are set
-export function initFirebase(): void {
+// Initialize Firebase Admin dynamically and safely if environment variables are set
+export async function initFirebase(): Promise<void> {
+  if (firebaseInitialized) return;
+  firebaseInitialized = true;
+
   const projectId = process.env.FIREBASE_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  let privateKey = process.env.FIREBASE_PRIVATE_KEY;
 
   if (projectId && clientEmail && privateKey) {
     try {
-      if (!admin.apps.length) {
+      privateKey = privateKey.replace(/\\n/g, "\n");
+      const adminModule = await import("firebase-admin");
+      const admin = adminModule.default || adminModule;
+      if (!admin.apps || !admin.apps.length) {
         admin.initializeApp({
           credential: admin.credential.cert({
             projectId,
@@ -23,7 +30,7 @@ export function initFirebase(): void {
       firestoreDb = admin.firestore();
       console.log("✓ Firebase Admin initialized with Firestore support.");
     } catch (error) {
-      console.warn("⚠️ Firebase Admin initialization failed; using local botanical disease knowledge base.", error);
+      console.warn("⚠️ Firebase Admin initialization failed; using local botanical disease encyclopedia.", error);
     }
   } else {
     console.log("ℹ️ Firebase credentials not provided. Using embedded botanical disease encyclopedia.");
@@ -146,6 +153,7 @@ function normalizeKey(text: string): string {
  * Retrieves disease information either from Firestore or the botanical encyclopedia
  */
 export async function getDiseaseDetails(queryName: string, plantDisplayName?: string): Promise<DiseaseInfo> {
+  await initFirebase().catch(() => {});
   const normalizedKey = normalizeKey(queryName);
 
   // 1. Try querying live Firestore if initialized

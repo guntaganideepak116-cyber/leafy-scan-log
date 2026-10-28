@@ -7,9 +7,6 @@ import { analyzePlantImage } from "./controllers/plant.controller.js";
 
 dotenv.config();
 
-// Initialize Firebase Admin (optional Firestore connection)
-initFirebase();
-
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 5000;
 

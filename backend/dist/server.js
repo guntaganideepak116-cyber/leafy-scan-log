@@ -4,16 +4,90 @@ import cors from "cors";
 import multer from "multer";
 import dotenv from "dotenv";
 
+// src/services/plantnet.service.ts
+var PLANTNET_API_BASE = "https://my-api.plantnet.org/v2/identify";
+var DEFAULT_PROJECT = "all";
+async function identifyPlantWithPlantNet(imageBuffer, mimeType, fileName = "leaf.jpg") {
+  const apiKey = process.env.PLANTNET_API_KEY;
+  if (!apiKey || apiKey.trim() === "" || apiKey === "your_plantnet_api_key_here") {
+    throw new Error(
+      "PLANTNET_API_KEY is not configured in backend .env. Please add your key from https://my.plantnet.org/"
+    );
+  }
+  const url = `${PLANTNET_API_BASE}/${DEFAULT_PROJECT}?api-key=${encodeURIComponent(apiKey.trim())}&include-related-images=true`;
+  const formData = new FormData();
+  const blob = new Blob([imageBuffer], { type: mimeType });
+  formData.append("images", blob, fileName);
+  formData.append("organs", "leaf");
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      body: formData
+    });
+    const remainingHeader = response.headers.get("x-ratelimit-remaining");
+    const remainingRequests = remainingHeader ? parseInt(remainingHeader, 10) : void 0;
+    if (!response.ok) {
+      if (response.status === 404) {
+        return {
+          success: true,
+          topResult: void 0,
+          message: "No botanical match found for this leaf image.",
+          statusCode: 404
+        };
+      }
+      if (response.status === 429) {
+        return {
+          success: false,
+          message: "Daily Pl@ntNet AI request limit exceeded. Please try again later or check your API key quota.",
+          statusCode: 429
+        };
+      }
+      if (response.status === 400) {
+        return {
+          success: false,
+          message: "Invalid image format or corrupted image file.",
+          statusCode: 400
+        };
+      }
+      const errorText = await response.text().catch(() => "");
+      return {
+        success: false,
+        message: `Pl@ntNet service returned HTTP ${response.status}: ${errorText || response.statusText}`,
+        statusCode: response.status
+      };
+    }
+    const data = await response.json();
+    const topResult = data.results && data.results.length > 0 ? data.results[0] : void 0;
+    return {
+      success: true,
+      topResult,
+      allResults: data.results,
+      remainingRequests: data.remainingIdentificationRequests ?? remainingRequests,
+      statusCode: 200
+    };
+  } catch (error) {
+    if (error instanceof TypeError && error.message.includes("fetch")) {
+      throw new Error("Unable to reach Pl@ntNet AI servers. Check server internet connectivity.");
+    }
+    throw error;
+  }
+}
+
 // src/services/firebase.service.ts
-import admin from "firebase-admin";
 var firestoreDb = null;
-function initFirebase() {
+var firebaseInitialized = false;
+async function initFirebase() {
+  if (firebaseInitialized) return;
+  firebaseInitialized = true;
   const projectId = process.env.FIREBASE_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  let privateKey = process.env.FIREBASE_PRIVATE_KEY;
   if (projectId && clientEmail && privateKey) {
     try {
-      if (!admin.apps.length) {
+      privateKey = privateKey.replace(/\\n/g, "\n");
+      const adminModule = await import("firebase-admin");
+      const admin = adminModule.default || adminModule;
+      if (!admin.apps || !admin.apps.length) {
         admin.initializeApp({
           credential: admin.credential.cert({
             projectId,
@@ -25,7 +99,7 @@ function initFirebase() {
       firestoreDb = admin.firestore();
       console.log("\u2713 Firebase Admin initialized with Firestore support.");
     } catch (error) {
-      console.warn("\u26A0\uFE0F Firebase Admin initialization failed; using local botanical disease knowledge base.", error);
+      console.warn("\u26A0\uFE0F Firebase Admin initialization failed; using local botanical disease encyclopedia.", error);
     }
   } else {
     console.log("\u2139\uFE0F Firebase credentials not provided. Using embedded botanical disease encyclopedia.");
@@ -150,6 +224,8 @@ function normalizeKey(text) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 async function getDiseaseDetails(queryName, plantDisplayName) {
+  await initFirebase().catch(() => {
+  });
   const normalizedKey = normalizeKey(queryName);
   if (firestoreDb) {
     try {
@@ -207,75 +283,6 @@ async function getDiseaseDetails(queryName, plantDisplayName) {
     },
     prevention: "Inspect leaf undersides periodically and wipe dust to support healthy photosynthesis."
   };
-}
-
-// src/services/plantnet.service.ts
-var PLANTNET_API_BASE = "https://my-api.plantnet.org/v2/identify";
-var DEFAULT_PROJECT = "all";
-async function identifyPlantWithPlantNet(imageBuffer, mimeType, fileName = "leaf.jpg") {
-  const apiKey = process.env.PLANTNET_API_KEY;
-  if (!apiKey || apiKey.trim() === "" || apiKey === "your_plantnet_api_key_here") {
-    throw new Error(
-      "PLANTNET_API_KEY is not configured in backend .env. Please add your key from https://my.plantnet.org/"
-    );
-  }
-  const url = `${PLANTNET_API_BASE}/${DEFAULT_PROJECT}?api-key=${encodeURIComponent(apiKey.trim())}&include-related-images=true`;
-  const formData = new FormData();
-  const blob = new Blob([imageBuffer], { type: mimeType });
-  formData.append("images", blob, fileName);
-  formData.append("organs", "leaf");
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      body: formData
-    });
-    const remainingHeader = response.headers.get("x-ratelimit-remaining");
-    const remainingRequests = remainingHeader ? parseInt(remainingHeader, 10) : void 0;
-    if (!response.ok) {
-      if (response.status === 404) {
-        return {
-          success: true,
-          topResult: void 0,
-          message: "No botanical match found for this leaf image.",
-          statusCode: 404
-        };
-      }
-      if (response.status === 429) {
-        return {
-          success: false,
-          message: "Daily Pl@ntNet AI request limit exceeded. Please try again later or check your API key quota.",
-          statusCode: 429
-        };
-      }
-      if (response.status === 400) {
-        return {
-          success: false,
-          message: "Invalid image format or corrupted image file.",
-          statusCode: 400
-        };
-      }
-      const errorText = await response.text().catch(() => "");
-      return {
-        success: false,
-        message: `Pl@ntNet service returned HTTP ${response.status}: ${errorText || response.statusText}`,
-        statusCode: response.status
-      };
-    }
-    const data = await response.json();
-    const topResult = data.results && data.results.length > 0 ? data.results[0] : void 0;
-    return {
-      success: true,
-      topResult,
-      allResults: data.results,
-      remainingRequests: data.remainingIdentificationRequests ?? remainingRequests,
-      statusCode: 200
-    };
-  } catch (error) {
-    if (error instanceof TypeError && error.message.includes("fetch")) {
-      throw new Error("Unable to reach Pl@ntNet AI servers. Check server internet connectivity.");
-    }
-    throw error;
-  }
 }
 
 // src/controllers/plant.controller.ts
@@ -374,7 +381,6 @@ async function analyzePlantImage(req, res) {
 
 // src/server.ts
 dotenv.config();
-initFirebase();
 var app = express();
 var PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 5e3;
 app.use(
