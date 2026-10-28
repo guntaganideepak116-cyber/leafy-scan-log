@@ -10,9 +10,7 @@
     },
     "backend": {
       "root": "backend",
-      "framework": "express",
-      "buildCommand": "npm run build",
-      "entrypoint": "dist/server.js"
+      "framework": "express"
     }
   },
   "rewrites": [
