@@ -94,20 +94,46 @@ function ScannerPage() {
       setCameraStatus("requesting");
       try {
         stopCamera();
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: { ideal: mode },
-            width: { ideal: 1920 },
-            height: { ideal: 1080 },
-          },
-          audio: false,
-        });
+        let stream: MediaStream;
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              facingMode: mode === "environment" ? { ideal: "environment" } : "user",
+              width: { ideal: 1280, max: 1920 },
+              height: { ideal: 720, max: 1080 },
+            },
+            audio: false,
+          });
+        } catch {
+          try {
+            // Fallback 1: basic facingMode constraint
+            stream = await navigator.mediaDevices.getUserMedia({
+              video: { facingMode: mode === "environment" ? "environment" : "user" },
+              audio: false,
+            });
+          } catch {
+            // Fallback 2: any available camera sensor
+            stream = await navigator.mediaDevices.getUserMedia({
+              video: true,
+              audio: false,
+            });
+          }
+        }
+
         streamRef.current = stream;
+        setCameraStatus("active");
+
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
-          await videoRef.current.play().catch(() => undefined);
+          videoRef.current.setAttribute("playsinline", "true");
+          videoRef.current.setAttribute("webkit-playsinline", "true");
+          videoRef.current.muted = true;
+          try {
+            await videoRef.current.play();
+          } catch {
+            // Handled by onLoadedMetadata
+          }
         }
-        setCameraStatus("active");
       } catch (err) {
         const name = err instanceof DOMException ? err.name : "";
         setCameraStatus(
@@ -117,6 +143,19 @@ function ScannerPage() {
     },
     [facingMode, stopCamera],
   );
+
+  // Guarantee that whenever camera becomes active and video element is mounted, the stream is attached & played
+  useEffect(() => {
+    if (cameraStatus === "active" && streamRef.current && videoRef.current) {
+      if (videoRef.current.srcObject !== streamRef.current) {
+        videoRef.current.srcObject = streamRef.current;
+        videoRef.current.setAttribute("playsinline", "true");
+        videoRef.current.setAttribute("webkit-playsinline", "true");
+        videoRef.current.muted = true;
+      }
+      void videoRef.current.play().catch(() => undefined);
+    }
+  }, [cameraStatus]);
 
   useEffect(() => {
     if (!session.capturedFile && !scanResult) void startCamera("environment");
@@ -460,19 +499,43 @@ function ScannerPage() {
             </Button>
           </div>
         </section>
-      ) : cameraStatus === "active" ? (
+      ) : cameraStatus === "active" || cameraStatus === "requesting" ? (
         /* ── 4. LIVE NATIVE CAMERA VIEWFINDER ── */
         <section aria-label="Live camera view" className="flex flex-col gap-3">
           {/* Viewfinder Window */}
           <div className="relative aspect-3/4 w-full overflow-hidden rounded-3xl border-2 border-emerald-500/20 bg-black shadow-2xl">
             <video
-              ref={videoRef}
+              ref={(el) => {
+                videoRef.current = el;
+                if (el && streamRef.current && el.srcObject !== streamRef.current) {
+                  el.srcObject = streamRef.current;
+                  el.setAttribute("playsinline", "true");
+                  el.setAttribute("webkit-playsinline", "true");
+                  el.muted = true;
+                  void el.play().catch(() => undefined);
+                }
+              }}
               playsInline
               muted
               autoPlay
+              onLoadedMetadata={(e) => {
+                const vid = e.currentTarget;
+                vid.muted = true;
+                void vid.play().catch(() => undefined);
+              }}
               aria-label="Live camera preview"
               className="h-full w-full object-cover"
             />
+
+            {/* Spinner overlay while camera hardware is connecting */}
+            {cameraStatus === "requesting" && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/75 z-20">
+                <div className="h-10 w-10 animate-spin rounded-full border-3 border-emerald-400 border-t-transparent mb-3" />
+                <span className="text-xs font-semibold text-emerald-200">
+                  Starting camera feed...
+                </span>
+              </div>
+            )}
 
             {/* Viewfinder HUD: Corner target brackets */}
             <div className="pointer-events-none absolute inset-6 flex flex-col justify-between">
@@ -517,7 +580,12 @@ function ScannerPage() {
             <button
               type="button"
               onClick={capture}
-              className="relative flex h-18 w-18 items-center justify-center rounded-full border-4 border-white bg-emerald-600 shadow-xl shadow-emerald-600/30 active:scale-90 transition-transform"
+              disabled={cameraStatus !== "active"}
+              className={`relative flex h-18 w-18 items-center justify-center rounded-full border-4 border-white bg-emerald-600 shadow-xl shadow-emerald-600/30 transition-all ${
+                cameraStatus === "active"
+                  ? "active:scale-90 hover:bg-emerald-700 cursor-pointer"
+                  : "opacity-50 cursor-not-allowed"
+              }`}
               aria-label="Capture photo"
             >
               <div className="h-12 w-12 rounded-full bg-white shadow-inner flex items-center justify-center">
@@ -529,7 +597,8 @@ function ScannerPage() {
             <button
               type="button"
               onClick={toggleCameraFacing}
-              className="flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground active:scale-90 transition-transform"
+              disabled={cameraStatus === "requesting"}
+              className="flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground active:scale-90 transition-transform disabled:opacity-50"
               aria-label="Flip camera"
             >
               <div className="flex h-11 w-11 items-center justify-center rounded-full bg-muted/60">
@@ -548,21 +617,17 @@ function ScannerPage() {
                 ? "Camera permission denied"
                 : cameraStatus === "insecure"
                   ? "Secure connection required"
-                  : cameraStatus === "unavailable"
-                    ? "Camera not detected"
-                    : "Starting camera..."
+                  : "Camera not detected"
             }
             message={
               cameraStatus === "denied"
                 ? "Allow camera permissions in browser settings, or upload a photo directly."
-                : cameraStatus === "unavailable"
-                  ? "No active camera found. You can still upload a leaf photo from your files."
-                  : "Please wait while we connect your device camera."
+                : cameraStatus === "insecure"
+                  ? "Camera access requires HTTPS or localhost."
+                  : "No active camera found. You can still upload a leaf photo from your files."
             }
-            actionLabel={cameraStatus === "requesting" ? undefined : "Try Camera Again"}
-            onAction={
-              cameraStatus === "requesting" ? undefined : () => void startCamera(facingMode)
-            }
+            actionLabel="Try Camera Again"
+            onAction={() => void startCamera(facingMode)}
           />
 
           {/* Direct File Upload Alternative */}
