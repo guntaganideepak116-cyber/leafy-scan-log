@@ -4,6 +4,7 @@ node_modules/
 
 # Production build outputs
 dist/
+!backend/dist/server.js
 dist-ssr/
 .output/
 .vinxi/
