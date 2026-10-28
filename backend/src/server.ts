@@ -99,3 +99,10 @@ if (process.env.NODE_ENV !== "production" && !process.env.VERCEL) {
 
 export default app;
 export { app };
+
+// Guarantee callable CommonJS export compatibility for Vercel Serverless
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = app;
+  (module.exports as unknown as Record<string, unknown>).default = app;
+  (module.exports as unknown as Record<string, unknown>).app = app;
+}

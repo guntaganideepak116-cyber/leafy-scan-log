@@ -31072,6 +31072,11 @@ if (process.env.NODE_ENV !== "production" && !process.env.VERCEL) {
   });
 }
 var server_default = app;
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = app;
+  module.exports.default = app;
+  module.exports.app = app;
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   app
@@ -31388,7 +31393,3 @@ object-assign/index.js:
   @license MIT
   *)
 */
-
-module.exports = app;
-module.exports.default = app;
-module.exports.app = app;
