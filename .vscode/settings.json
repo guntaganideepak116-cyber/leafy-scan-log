@@ -1,0 +1,10 @@
+{
+  "css.lint.unknownAtRules": "ignore",
+  "css.validate": false,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "files.eol": "\n",
+  "eslint.workingDirectories": ["./frontend"],
+  "git.ignoredRepositories": ["C:/Users/nithi", "c:/Users/nithi"]
+}
