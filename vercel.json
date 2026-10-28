@@ -4,11 +4,14 @@
   "services": {
     "frontend": {
       "root": "frontend",
-      "framework": "tanstack-start"
+      "framework": "tanstack-start",
+      "buildCommand": "npm run build"
     },
     "backend": {
       "root": "backend",
-      "framework": "express"
+      "framework": "express",
+      "entrypoint": "dist/server.js",
+      "buildCommand": "npm run build"
     }
   },
   "rewrites": [
