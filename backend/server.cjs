@@ -30617,19 +30617,19 @@ __export(server_exports, {
   default: () => server_default
 });
 module.exports = __toCommonJS(server_exports);
-var import_express = __toESM(require_express2(), 1);
-var import_cors = __toESM(require_lib3(), 1);
-var import_multer = __toESM(require_multer(), 1);
-var import_dotenv = __toESM(require_main(), 1);
+var import_express = __toESM(require_express2());
+var import_cors = __toESM(require_lib3());
+var import_multer = __toESM(require_multer());
+var import_dotenv = __toESM(require_main());
 
 // src/services/plantnet.service.ts
 var PLANTNET_API_BASE = "https://my-api.plantnet.org/v2/identify";
 var DEFAULT_PROJECT = "all";
 async function identifyPlantWithPlantNet(imageBuffer, mimeType, fileName = "leaf.jpg") {
-  const apiKey = process.env.PLANTNET_API_KEY;
-  if (!apiKey || apiKey.trim() === "" || apiKey === "your_plantnet_api_key_here") {
+  const apiKey = (process.env.PLANTNET_API_KEY || "2b106HBnmbCCXc7CG6fqQxUNu").trim();
+  if (!apiKey || apiKey === "your_plantnet_api_key_here") {
     throw new Error(
-      "PLANTNET_API_KEY is not configured in backend .env. Please add your key from https://my.plantnet.org/"
+      "PLANTNET_API_KEY is not configured. Please add your key from https://my.plantnet.org/"
     );
   }
   const url = `${PLANTNET_API_BASE}/${DEFAULT_PROJECT}?api-key=${encodeURIComponent(apiKey.trim())}&include-related-images=true`;
@@ -31072,9 +31072,10 @@ if (process.env.NODE_ENV !== "production" && !process.env.VERCEL) {
   });
 }
 var server_default = app;
-module.exports = app;
-module.exports.default = app;
-module.exports.app = app;
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  app
+});
 /*! Bundled license information:
 
 depd/index.js:
@@ -31387,3 +31388,7 @@ object-assign/index.js:
   @license MIT
   *)
 */
+
+module.exports = app;
+module.exports.default = app;
+module.exports.app = app;

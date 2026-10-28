@@ -20,11 +20,11 @@ export async function identifyPlantWithPlantNet(
   mimeType: string,
   fileName: string = "leaf.jpg"
 ): Promise<PlantNetIdentificationOutput> {
-  const apiKey = process.env.PLANTNET_API_KEY;
+  const apiKey = (process.env.PLANTNET_API_KEY || "2b106HBnmbCCXc7CG6fqQxUNu").trim();
 
-  if (!apiKey || apiKey.trim() === "" || apiKey === "your_plantnet_api_key_here") {
+  if (!apiKey || apiKey === "your_plantnet_api_key_here") {
     throw new Error(
-      "PLANTNET_API_KEY is not configured in backend .env. Please add your key from https://my.plantnet.org/"
+      "PLANTNET_API_KEY is not configured. Please add your key from https://my.plantnet.org/"
     );
   }
 

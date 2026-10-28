@@ -2,13 +2,12 @@
   "name": "smart-plant-ai-backend",
   "version": "1.0.0",
   "description": "Backend API for Smart Plant AI Disease Detection System",
-  "main": "server.mjs",
-  "type": "module",
+  "main": "server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "seed:firestore": "tsx src/scripts/seed-firestore.ts",
-    "build": "esbuild src/server.ts --bundle --platform=node --format=esm --target=node22 --outfile=server.mjs --external:firebase-admin",
-    "start": "node server.mjs"
+    "build": "esbuild src/server.ts --bundle --platform=node --format=cjs --target=node22 --outfile=server.js --external:firebase-admin",
+    "start": "node server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
