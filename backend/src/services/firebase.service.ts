@@ -134,12 +134,61 @@ const FALLBACK_DISEASE_DB: Record<string, DiseaseInfo> = {
       chemical: "Triforine, Chlorothalonil, or Difenoconazole sprays."
     },
     prevention: "Plant resistant varieties, place plants in full sun, and prune to keep centers open."
+  },
+  "caterpillar-pest": {
+    name: "Caterpillar & Foliar Worm Damage (Lepidoptera / Spodoptera)",
+    status: "diseased",
+    description: "Active pest infestation where chewing caterpillars or armyworms feed directly on foliar tissue, skeletonizing leaves, creating irregular holes, and stunting plant growth.",
+    symptoms: [
+      "Irregular chewing holes and scalloped or skeletonized leaf margins",
+      "Dark green or black frass (caterpillar droppings) visible on leaf surfaces",
+      "Presence of larvae, feeding worms, or silk webbing on leaf undersides"
+    ],
+    treatment: {
+      organic: "Apply Bacillus thuringiensis (Bt - Kurstaki strain) or Spinosad spray. Bt is completely biological and lethal specifically to leaf-chewing worms and caterpillars.",
+      cultural: "Hand-pick caterpillars in the morning; install physical insect barriers; encourage natural predators like ladybugs and predatory wasps.",
+      chemical: "Chlorantraniliprole, Indoxacarb, or Permethrin insecticide for severe crop infestations."
+    },
+    prevention: "Inspect leaf undersides weekly for egg clusters, install fine-mesh insect netting, and practice weed management around garden beds."
+  },
+  "leaf-miner": {
+    name: "Serpentine Leaf Miner Infestation (Liriomyza spp.)",
+    status: "diseased",
+    description: "Infestation by insect larvae (worm/maggot stage) tunneling inside the interior leaf mesophyll, leaving characteristic translucent winding tunnels that destroy photosynthetic tissue.",
+    symptoms: [
+      "Winding serpentine white or pale-yellow trails/tunnels across leaf blades",
+      "Leaf blotching, premature yellowing, and necrotic leaf drop",
+      "Tiny black frass pellets visible within the winding mines"
+    ],
+    treatment: {
+      organic: "Apply cold-pressed Neem oil or introduce parasitic wasps (Diglyphus isaea) to control larvae within the mines.",
+      cultural: "Hand-pick and destroy mined leaves before larvae pupate; hang yellow sticky cards to trap adult egg-laying flies.",
+      chemical: "Abamectin or Spinosad translaminar sprays that penetrate into the leaf tissue."
+    },
+    prevention: "Use floating row covers in early season and remove nightshade weed hosts near crops."
+  },
+  "spider-mites": {
+    name: "Spider Mites & Sap-Sucking Pests (Tetranychidae)",
+    status: "diseased",
+    description: "Microscopic sap-sucking arachnid pests that pierce plant cell walls on leaf undersides, draining chlorophyll and producing fine webbing.",
+    symptoms: [
+      "Fine yellow or bronze speckling (stippling) across the upper leaf surface",
+      "Fine silky webbing visible along leaf veins and stem junctions",
+      "Dry, papery, bleached foliage leading to premature leaf drop"
+    ],
+    treatment: {
+      organic: "Spray leaves thoroughly with cold-pressed Neem oil or insecticidal potassium soap solution, coating leaf undersides.",
+      cultural: "Increase ambient humidity (spider mites thrive in hot, dry dust); blast undersides of leaves with water.",
+      chemical: "Targeted miticides such as Bifenazate or Spiromesifen."
+    },
+    prevention: "Keep plants well-hydrated, avoid excessive synthetic nitrogen fertilizer, and isolate newly purchased nursery plants."
   }
 };
 
 const DISEASE_KEYWORDS = [
   "blight", "rust", "mildew", "spot", "rot", "canker", "scab", "wilt",
-  "mosaic", "virus", "chlorosis", "scorch", "mold", "gall", "smut"
+  "mosaic", "virus", "chlorosis", "scorch", "mold", "gall", "smut",
+  "miner", "worm", "caterpillar", "pest", "insect", "mite", "aphid", "bug", "chewing", "borer", "armyworm", "larvae"
 ];
 
 /**
