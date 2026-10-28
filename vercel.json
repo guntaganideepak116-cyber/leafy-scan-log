@@ -3,10 +3,12 @@
   "name": "smartplant-ai",
   "services": {
     "frontend": {
-      "root": "frontend"
+      "root": "frontend",
+      "framework": "tanstack-start"
     },
     "backend": {
-      "root": "backend"
+      "root": "backend",
+      "framework": "express"
     }
   },
   "rewrites": [
