@@ -152,8 +152,16 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    font-feature-settings: "ss01" on, "cv11" on;
+    font-family:
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+    font-feature-settings:
+      "ss01" on,
+      "cv11" on;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-width: 320px;
@@ -183,21 +191,38 @@
 
 @keyframes analyze-pulse {
   0%,
-  100% { opacity: 0.42; transform: scale(0.9); }
-  50% { opacity: 1; transform: scale(1); }
+  100% {
+    opacity: 0.42;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes scan-glow {
-  0%, 100% { transform: translateY(-8px); opacity: 0.6; }
-  50% { transform: translateY(9px); opacity: 1; }
+  0%,
+  100% {
+    transform: translateY(-8px);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(9px);
+    opacity: 1;
+  }
 }
 
 .analysis-pulse {
   animation: analyze-pulse 1.4s ease-in-out infinite;
 }
 
-.analysis-pulse:nth-child(2) { animation-delay: 180ms; }
-.analysis-pulse:nth-child(3) { animation-delay: 360ms; }
+.analysis-pulse:nth-child(2) {
+  animation-delay: 180ms;
+}
+.analysis-pulse:nth-child(3) {
+  animation-delay: 360ms;
+}
 
 .scan-indicator {
   animation: scan-glow 2.4s ease-in-out infinite;
@@ -227,6 +252,46 @@
 .confidence-progress::-moz-progress-bar {
   border-radius: 9999px;
   background: var(--color-primary);
+}
+
+@keyframes laser-sweep {
+  0% {
+    top: 6%;
+    opacity: 0.85;
+  }
+  50% {
+    top: 92%;
+    opacity: 1;
+  }
+  100% {
+    top: 6%;
+    opacity: 0.85;
+  }
+}
+
+.laser-scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #10b981 25%,
+    #34d399 50%,
+    #10b981 75%,
+    transparent
+  );
+  box-shadow: 0 0 16px 4px rgba(16, 185, 129, 0.75);
+  animation: laser-sweep 2.4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* Native mobile tap response */
+button,
+a {
+  touch-action: manipulation;
 }
 
 @media (prefers-reduced-motion: reduce) {

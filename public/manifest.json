@@ -1,0 +1,52 @@
+{
+  "id": "/",
+  "name": "Smart Plant AI — Plant Disease Scanner",
+  "short_name": "SmartPlant AI",
+  "description": "AI-powered real-time plant leaf disease detection with instant remedies and diagnosis.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "window-controls-overlay"],
+  "orientation": "portrait-primary",
+  "background_color": "#064e3b",
+  "theme_color": "#059669",
+  "categories": ["utilities", "medical", "education"],
+  "icons": [
+    {
+      "src": "/icons/plant-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/plant-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/plant-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/plant-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Scan Leaf",
+      "url": "/scanner",
+      "description": "Launch camera scanner immediately"
+    },
+    {
+      "name": "Scan History",
+      "url": "/history",
+      "description": "View previous plant diagnoses"
+    }
+  ]
+}

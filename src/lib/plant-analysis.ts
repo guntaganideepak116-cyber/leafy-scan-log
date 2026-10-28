@@ -33,9 +33,9 @@ export const MAX_IMAGE_BYTES = 12 * 1024 * 1024;
 export function isValidPlantImage(image: File | null | undefined): image is File {
   return Boolean(
     image &&
-      image.size > 0 &&
-      image.size <= MAX_IMAGE_BYTES &&
-      ["image/jpeg", "image/png"].includes(image.type.toLowerCase()),
+    image.size > 0 &&
+    image.size <= MAX_IMAGE_BYTES &&
+    ["image/jpeg", "image/png"].includes(image.type.toLowerCase()),
   );
 }
 
@@ -67,12 +67,12 @@ export function hasConfidentDisease(analysis: PlantAnalysis | null): boolean {
   const disease = analysis?.disease;
   return Boolean(
     disease &&
-      typeof disease.name === "string" &&
-      disease.name.trim().length > 0 &&
-      typeof disease.score === "number" &&
-      Number.isFinite(disease.score) &&
-      disease.score >= MIN_DISEASE_CONFIDENCE &&
-      disease.score <= 1,
+    typeof disease.name === "string" &&
+    disease.name.trim().length > 0 &&
+    typeof disease.score === "number" &&
+    Number.isFinite(disease.score) &&
+    disease.score >= MIN_DISEASE_CONFIDENCE &&
+    disease.score <= 1,
   );
 }
 
@@ -105,7 +105,10 @@ export function saveScanHistory(analysis: PlantAnalysis | null): ScanRecord {
 
   try {
     const history = readScanHistory();
-    window.localStorage.setItem(SCAN_HISTORY_KEY, JSON.stringify([record, ...history].slice(0, 50)));
+    window.localStorage.setItem(
+      SCAN_HISTORY_KEY,
+      JSON.stringify([record, ...history].slice(0, 50)),
+    );
   } catch {
     // AI results remain visible even when the browser disables local history.
   }
@@ -119,11 +122,16 @@ export function describeAnalysisError(error: unknown): string {
   }
 
   if (error instanceof Error) {
-    if (error.message === "analysis_failed") return "The analysis service couldn't identify this image.";
-    if (error.message === "image_too_large") return "Choose a smaller image under 12 MB and try again.";
+    if (error.message === "analysis_failed")
+      return "The analysis service couldn't identify this image.";
+    if (error.message === "image_too_large")
+      return "Choose a smaller image under 12 MB and try again.";
     if (error.message === "invalid_image") return "Choose a clear JPEG or PNG photo to analyze.";
-    if (error.message === "backend_unavailable") return "Plant analysis isn't connected yet. Add your backend address to continue.";
-    if (error.message === "request_timeout") return "The analysis took too long. Check your connection and try again.";
+    if (error.message === "backend_unavailable")
+      return "Plant analysis isn't connected yet. Add your backend address to continue.";
+    if (error.message === "request_timeout")
+      return "The analysis took too long. Check your connection and try again.";
+    if (error.message && error.message.trim().length > 0) return error.message;
   }
 
   return "We couldn't complete the AI analysis. Please try again.";

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { WifiOff } from "lucide-react";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useOnlineStatus(): boolean {
   const [online, setOnline] = useState(() =>
     typeof navigator === "undefined" ? true : navigator.onLine,

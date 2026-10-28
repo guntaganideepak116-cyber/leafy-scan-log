@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { ReactNode } from "react";
 import type { PlantAnalysis, ScanRecord } from "@/lib/plant-analysis";
 import { saveScanHistory } from "@/lib/plant-analysis";
@@ -65,13 +73,28 @@ export function PlantAppProvider({ children }: { children: ReactNode }) {
   );
 
   const value = useMemo(
-    () => ({ session, historySelection, setCapturedImage, saveAnalysis, selectHistoryRecord, clearCurrentScan }),
-    [session, historySelection, setCapturedImage, saveAnalysis, selectHistoryRecord, clearCurrentScan],
+    () => ({
+      session,
+      historySelection,
+      setCapturedImage,
+      saveAnalysis,
+      selectHistoryRecord,
+      clearCurrentScan,
+    }),
+    [
+      session,
+      historySelection,
+      setCapturedImage,
+      saveAnalysis,
+      selectHistoryRecord,
+      clearCurrentScan,
+    ],
   );
 
   return <PlantAppContext.Provider value={value}>{children}</PlantAppContext.Provider>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function usePlantApp(): PlantAppContextValue {
   const context = useContext(PlantAppContext);
   if (!context) throw new Error("Plant app state must be used inside PlantAppProvider.");

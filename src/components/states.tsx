@@ -15,7 +15,10 @@ export function ErrorState({
   onAction?: (() => void) | undefined;
 }) {
   return (
-    <div role="alert" className="flex flex-col items-center gap-3 rounded-xl border border-destructive/30 bg-destructive/5 px-6 py-8 text-center">
+    <div
+      role="alert"
+      className="flex flex-col items-center gap-3 rounded-xl border border-destructive/30 bg-destructive/5 px-6 py-8 text-center"
+    >
       <AlertTriangle className="h-8 w-8 text-destructive" aria-hidden="true" />
       <p className="text-base font-semibold text-foreground">{title}</p>
       <p className="text-sm text-muted-foreground">{message}</p>

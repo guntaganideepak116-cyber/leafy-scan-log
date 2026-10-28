@@ -1,5 +1,5 @@
 {
-  "name": "tanstack_start_ts",
+  "name": "smart-plant-ai-frontend",
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -12,9 +12,6 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest"
-  },
-  "overrides": {
-    "rolldown": "1.2.1"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

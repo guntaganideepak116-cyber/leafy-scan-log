@@ -11,7 +11,6 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppHeader } from "@/components/app-header";
 import { BottomNavigation } from "@/components/bottom-navigation";
 import { InstallPrompt } from "@/components/install-prompt";
@@ -44,9 +43,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -55,7 +51,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
           This page didn't load
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          Something went wrong. You can try refreshing or head back home.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -83,20 +79,40 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Smart Plant AI" },
-      { name: "description", content: "AI-powered plant disease detection from your camera." },
-      { property: "og:title", content: "Smart Plant AI" },
-      { property: "og:description", content: "AI-powered plant disease detection from your camera." },
+      {
+        name: "viewport",
+        content:
+          "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover",
+      },
+      { title: "Smart Plant AI — Real-time Plant Disease Detection" },
+      {
+        name: "description",
+        content:
+          "AI-powered plant disease detection. Scan any plant leaf and get instant real analysis with confidence scores, treatment guidance, and severity assessment.",
+      },
+      { property: "og:title", content: "Smart Plant AI — Real-time Plant Disease Detection" },
+      {
+        property: "og:description",
+        content: "AI-powered plant disease detection from your camera.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "theme-color", content: "#059669" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "apple-mobile-web-app-title", content: "SmartPlant AI" },
     ],
     links: [
+      { rel: "manifest", href: "/manifest.json" },
+      { rel: "apple-touch-icon", href: "/icons/plant-192.png" },
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
   shellComponent: RootShell,
@@ -107,11 +123,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full bg-slate-950">
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="h-full bg-slate-950 text-foreground antialiased selection:bg-emerald-500 selection:text-white">
         {children}
         <Scripts />
       </body>
@@ -129,12 +145,17 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <PlantAppProvider>
-        <AppHeader />
-        <OfflineBanner />
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
-        <BottomNavigation />
-        <InstallPrompt />
+        <div className="min-h-screen w-full bg-slate-950 flex flex-col items-center justify-start">
+          <div className="w-full max-w-md sm:max-w-lg min-h-screen bg-background text-foreground shadow-2xl relative flex flex-col border-x border-border/30">
+            <AppHeader />
+            <OfflineBanner />
+            <div className="flex-1 w-full pb-[calc(env(safe-area-inset-bottom)+5.5rem)]">
+              <Outlet />
+            </div>
+            <BottomNavigation />
+            <InstallPrompt />
+          </div>
+        </div>
       </PlantAppProvider>
     </QueryClientProvider>
   );
