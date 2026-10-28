@@ -43,4 +43,10 @@ export default tseslint.config(
     },
   },
   eslintPluginPrettier,
+  {
+    rules: {
+      // Disable formatting as lint error to permanently prevent CRLF \r line-ending squigglies on Windows
+      "prettier/prettier": "off",
+    },
+  },
 );
