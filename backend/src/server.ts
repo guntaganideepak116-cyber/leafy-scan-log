@@ -45,8 +45,8 @@ app.get("/", (_req, res) => {
   });
 });
 
-// Health check endpoint
-app.get("/api/health", (_req, res) => {
+// Health check endpoint (handles both direct /health and prefixed /api/health)
+app.get(["/health", "/api/health"], (_req, res) => {
   const hasPlantNetKey = Boolean(
     process.env.PLANTNET_API_KEY &&
       process.env.PLANTNET_API_KEY.trim() !== "" &&
@@ -62,8 +62,8 @@ app.get("/api/health", (_req, res) => {
   });
 });
 
-// Primary plant analysis endpoint expected by frontend
-app.post("/api/plant/analyze", upload.single("image"), analyzePlantImage);
+// Primary plant analysis endpoint expected by frontend (handles both direct and /api prefixed)
+app.post(["/plant/analyze", "/api/plant/analyze"], upload.single("image"), analyzePlantImage);
 
 // Multer error handling and 404 middleware
 app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
@@ -89,15 +89,7 @@ app.use((err: unknown, _req: express.Request, res: express.Response, _next: expr
   });
 });
 
-import { fileURLToPath } from "node:url";
-import { resolve } from "node:path";
-
-const isMainModule = Boolean(
-  process.argv[1] &&
-    resolve(process.argv[1]).toLowerCase() === resolve(fileURLToPath(import.meta.url)).toLowerCase()
-);
-
-if (isMainModule && !process.env.VERCEL) {
+if (!process.env.VERCEL) {
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`===============================================`);
     console.log(`🌱 SMART PLANT AI BACKEND SERVICE STARTED`);
