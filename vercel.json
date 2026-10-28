@@ -20,16 +20,17 @@
       }
     },
     {
-      "source": "/api/(.*)",
+      "source": "/api/:path*",
       "destination": {
         "service": "backend",
-        "path": "/api/$1"
+        "path": "/api/:path*"
       }
     },
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "destination": {
-        "service": "frontend"
+        "service": "frontend",
+        "path": "/:path*"
       }
     }
   ]

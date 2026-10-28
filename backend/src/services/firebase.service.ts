@@ -11,13 +11,15 @@ export function initFirebase(): void {
 
   if (projectId && clientEmail && privateKey) {
     try {
-      admin.initializeApp({
-        credential: admin.credential.cert({
-          projectId,
-          clientEmail,
-          privateKey,
-        }),
-      });
+      if (!admin.apps.length) {
+        admin.initializeApp({
+          credential: admin.credential.cert({
+            projectId,
+            clientEmail,
+            privateKey,
+          }),
+        });
+      }
       firestoreDb = admin.firestore();
       console.log("✓ Firebase Admin initialized with Firestore support.");
     } catch (error) {
