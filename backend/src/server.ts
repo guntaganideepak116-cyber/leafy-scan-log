@@ -86,7 +86,7 @@ app.use((err: unknown, _req: express.Request, res: express.Response, _next: expr
   });
 });
 
-if (!process.env.VERCEL) {
+if (process.env.NODE_ENV !== "production" && !process.env.VERCEL) {
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`===============================================`);
     console.log(`🌱 SMART PLANT AI BACKEND SERVICE STARTED`);

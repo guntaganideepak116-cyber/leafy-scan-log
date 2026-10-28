@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "seed:firestore": "tsx src/scripts/seed-firestore.ts",
-    "build": "esbuild src/server.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist/server.js --packages=external",
+    "build": "esbuild src/server.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist/server.js --external:firebase-admin",
     "start": "node dist/server.js"
   },
   "dependencies": {
